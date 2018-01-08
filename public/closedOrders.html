@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Closed Orders</title>
+    <link rel="stylesheet" type="text/css" href="css/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="css/home.css">
+  </head>
+  <body>
+    <div id="closedOrders">
+      <div class="ui menu">
+        <a class="item" href="/">Home</a>
+        <a class="item" href="/holdings">Holdings</a>
+      </div>
+
+      <h3 v-if="closedOrders">Orders
+      <div class="ui toggle checkbox" v-if="closedOrders">
+        <input type="checkbox" v-on:change="toggleSell">
+        <label v-if="!buyOrders">Sell</label>
+        <label v-if="buyOrders">Buy</label>
+      </div></h3>
+
+      <table class="ui celled table half-table" v-if="closedOrders">
+        <thead>
+          <tr>
+            <th>Exchange</th>
+            <th>Limit</th>
+            <th>Actual price</th>
+            <th>Qty</th>
+            <th>Commission</th>
+            <th>Date</th>
+            <th>Profit</th>
+            <th>sell price</th>
+            <th>sell</th>
+            <th>Add</th>
+          </tr>
+       </thead>
+        <tbody>
+          <tr class="item" v-for="c in closedOrders" v-if="c.OrderType === orderFilter">
+            <td class="collapsing">
+              <i class="map marker icon"></i>
+              {{c.Exchange}}
+            </td>
+            <td>{{c.Limit}}</td>
+            <td>{{c.PricePerUnit}}</td>
+            <td>{{c.Quantity}}</td>
+            <td>{{c.Commission}}</td>
+            <td>{{c.Closed}}</td>
+            <td><input type="number" placeholder="0.02" step="0.01" class="profitNum ui input" v-model="c.profitPercent"></td>
+            <td><input type="text" class="sellNum ui input" v-if="c.profitPercent" v-bind:value="(parseFloat(c.PricePerUnit) * c.profitPercent) + parseFloat(c.PricePerUnit) + ((c.Commission * 2)/c.Quantity)"></td>
+            <td><button class="ui button mini" v-on:click="sellOrder(c)">Sell Order</button></td>
+            <td class="right aligned collapsing"><a v-on:click="addToHoldings(c)">Add Hold</a></td>
+          </tr>
+          <tr>
+            <td><input type="text" name="" v-model="free.Exchange"></td>
+            <td>Limit</td>
+            <td><input type="text" v-model="free.PricePerUnit"></td>
+            <td><input type="text" v-model="free.Quantity"></td>
+            <td><input type="text" v-model="free.Commission"></td>
+            <td>Closed</td>
+            <td><input type="number" placeholder="0.02" step="0.01" class="profitNum ui input" v-model="free.profitPercent"></td>
+            <td><input type="text" class="sellNum ui input" v-bind:value="(parseFloat(free.PricePerUnit) * free.profitPercent) + parseFloat(free.PricePerUnit) + ((free.Commission * 2)/free.Quantity)"></td>
+            <td><button class="ui button mini" v-on:click="sellOrder(free)">Sell Order</button>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+    <script src="js/vue.js"></script>
+    <script src="js/vue-resource.min.js"></script>
+    <script src="js/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="></script>
+    <script src="js/semantic.min.js"></script>
+    <script src="js/closedOrders.js"></script>
+  </body>
+  </html>

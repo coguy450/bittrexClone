@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="css/charts.css">
+    <title>Historical data</title>
+  </head>
+  <body>
+    <div class="ui menu">
+      <a class="item" href="/">Home </a>
+      <a class="item" href="/holdings">Holdings</a>
+      <a class="item">Contact Us</a>
+      <a class="item" href="/closed">Closed Orders</a>
+    </div>
+    <div id="pageWrapper">
+
+
+      <div id="charts">
+      <h1>{{currentMarket}}  <img :src="marketData.LogoUrl" height="25" /> {{marketData.MarketCurrencyLong}}</h1>
+      <div class="ui form" style="margin: 0 0 10px 20px; width: 70vw">
+        <div class="inline fields">
+          <div class="field">
+            <select v-on:change="dataPoints" class="ui dropdown" style="width: 100px;">
+              <option>50</option>
+              <option>100</option>
+              <option>200</option>
+              <option>250</option>
+              <option>500</option>
+              <option>1000</option>
+              <option>2000</option>
+            </select>
+          </div>
+          <div class="field">
+            <select v-on:change="newCharts" class="ui dropdown" style="width: 100px;">
+              <option value="day">Days</option>
+              <option value="hour">Hours</option>
+              <option value="thirtyMin">30 Minutes</option>
+              <option value="fiveMin">5 Minutes</option>
+              <option value="oneMin">1 Minute</option>
+            </select>
+          </div>
+          <div class="field">
+            <button class="ui inverted violet button" v-if="marketData.goodToBuy !== 'false'" v-on:click="goodToBuy(false)">Long Dropper</button>
+            <button class="ui inverted teal button" v-if="marketData.goodToBuy !== 'true'" v-on:click="goodToBuy(true)">Good to Buy</button>
+          </div>
+          <div class="field">
+            <span>30 day low: {{marketData.thirtyDayLow}}</span>
+            <span>{{numUp}}ups: {{numDown}}downs</span>
+          </div>
+          <div class="field" v-if="analysis">
+            <span>DX: {{analysis.DX}}</span>
+            <span>CMO: {{analysis.CMO}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="ui segment loader-block" v-if="loading">
+        <div class="ui active inverted dimmer">
+          <div class="ui large text loader">Loading</div>
+        </div>
+        <p></p>
+        <p></p>
+        <p></p>
+      </div>
+      </div>
+
+    </div>
+    <script src="js/vue.js"></script>
+    <script src="js/vue-resource.min.js"></script>
+    <script src="js/d3.v4.min.js"></script>
+    <script src="js/techan.min.js"></script>
+    <script src="js/charts.js"></script>
+  </body>
+</html>

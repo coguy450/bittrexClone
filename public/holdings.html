@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Holding Values</title>
+    <link async rel="stylesheet" type="text/css" href="css/semantic.min.css">
+    <link async rel="stylesheet" type="text/css" href="css/home.css">
+  </head>
+  <body>
+    <div id="holdings">
+      <div class="ui menu">
+        <a class="item" href="/">Home</a>
+        <a class="item" v-on:click="getOrders(false)">Open Orders</a>
+        <a class="item" href="/closed">Closed Orders</a>
+      </div>
+      <h2>Holdings - ${{grandTotal}}</h2>
+      <div class="ui cards">
+        <div class="card" v-for="hol in holdings">
+        <div class="content">
+          <div class="header"><a :href="`/charts?cur=${hol.Exchange}`">{{hol.name}}</a> - {{hol.Exchange}}
+            <img :src="hol.logo" height="25" />
+          </div>
+          <div class="meta">Profit: {{hol.profit}}</div>
+          <div class="description">
+            Purchase Price: {{hol.PricePerUnit}}<br />
+            Current Price: {{hol.tick}}  <i v-on:click="refreshPrice(hol)" class="refresh icon"></i><br />
+          </div>
+        </div>
+      </div>
+      </div>
+      <h3 v-if="orders">Orders
+      <div class="ui toggle checkbox" v-if="orders">
+        <input type="checkbox" v-on:change="toggleSell">
+        <label v-if="!buyOrders">Sell</label>
+        <label v-if="buyOrders">Buy</label>
+      </div></h3>
+      <div v-if="orders" class="ui list">
+        <div class="item" v-for="o in orders" v-if="o.OrderType === orderFilter">
+          <i class="map marker icon"></i>
+          <div class="content">
+            <div class="header">{{o.Exchange}}</div>
+            <div class="description">{{o.Limit}} - {{o.Opened}}
+              <a v-if="!o.CancelInitiated" v-on:click="cancelOrder(o)">Cancel</a></div>
+          </div>
+        </div>
+      </div>
+      <h3 v-if="accountBalances">Bittex Holdings</h3>
+      <table class="ui celled table half-table" v-if="accountBalances">
+        <thead>
+          <tr>
+            <th>Exchange</th>
+            <th>Balance</th>
+            <th>Dollar Amt</th>
+            <th>Sell Order</th>
+            <th>Cancel</th>
+          </tr>
+       </thead>
+        <tbody>
+          <tr class="item" v-for="act in accountBalances" v-if="act.Balance > 0 && act.dollarAmt > 0">
+            <td>
+              <i v-if="act.Currency === 'BTC'" class="bitcoin icon"></i>
+              <i v-if="act.Currency === 'USDT'" class="dollar icon"></i>
+              {{act.Currency}}
+            </td>
+            <td>{{act.Balance}} </td>
+            <td>${{act.dollarAmt}}</td>
+            <td>{{act.OrderAmt}}</td>
+            <td><a v-if="act.OrderAmt" v-on:click="cancelOrder(act)">Cancel</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <script src="js/vue.js"></script>
+    <script src="js/vue-resource.min.js"></script>
+    <script async src="js/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="></script>
+    <script async src="js/semantic.min.js"></script>
+    <script src="js/holdings.js"></script>
+  </body>
+  </html>

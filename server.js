@@ -1,0 +1,50 @@
+const text = require('./sendText')
+const actions = require('./actions')
+const dbActions = require('./dbActions')
+const coinbase = require('./coinbase')
+const analyzers = require('./analyzers')
+const express = require('express')
+const bodyParser = require('body-parser')
+const path = require('path')
+const request = require('superagent')
+const app = express()
+
+app.set('port', (process.env.PORT || 12000))
+app.use(express.static(path.join(__dirname, '/public')))
+// app.use('/favicon', express.static(__dirname + '/public/favicon.ico'))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
+
+app.get('/marketSummaries', actions.getMarketSummaries)
+app.get('/getCurrencies', actions.getCurrencies)
+app.get('/getBalances', actions.getBalances)
+app.get('/getHistory', actions.getHistory)
+app.get('/saveMarkets', dbActions.saveMarkets)
+app.get('/getHighsLows', dbActions.getHighsLows)
+// app.get('/doFakeBuy', dbActions.doFakeBuy)
+app.get('/getHoldings', dbActions.getHoldings)
+app.get('/getOrders', actions.getOrders)
+app.get('/makeOrder', actions.makeOrder)
+app.get('/cancelOrder', actions.cancelOrder)
+app.post('/addHolding', dbActions.addHolding)
+app.post('/sellOrder', actions.sellOrder)
+app.get('/goodToBuy', dbActions.goodToBuy)
+app.get('/getOneMarket', dbActions.getOneMarket)
+app.get('/getFifty', actions.getFifty)
+app.post('/refreshPrice', actions.refreshPrice)
+
+app.use('/holdings', express.static(path.join(__dirname, '/public/holdings.html')))
+app.use('/closed', express.static(path.join(__dirname, '/public/closedOrders.html')))
+app.get('/charts', (req, res) => {
+  res.sendFile(path.join(__dirname, '/public/charts.html'))
+})
+app.get('/bitcoinPrice', coinbase.getPrice)
+
+
+process.on('uncaughtException', function (err) {
+  console.error(err)
+})
+
+app.listen(app.get('port'), () => {
+  console.log('Node app is running on port', app.get('port'))
+})
