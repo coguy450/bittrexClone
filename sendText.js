@@ -11,8 +11,8 @@ exports.goText = (msg, price) => {
   if (doText && currentTime < 23 && currentTime > 7) {
     tClient.messages.create({
       body: msg + price,
-      to: '+13035892180',
-      from: '+17206135946' // From a valid Twilio number
+      to: '',
+      from: '' // From a valid Twilio number
     }).then((message) => {
       console.log('text sent successfully', message.sid)
       doText = false
