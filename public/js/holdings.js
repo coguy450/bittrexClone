@@ -12,12 +12,12 @@ var mainApp = new Vue({
   },
   methods: {
     doOrderMap: function () {
-      this.accountBalances.map((bal) => {
+      this.holdings.map((hol) => {
         this.orders.map((ord) => {
-          if (bal.Currency === ord.Exchange.split('-')[1] && ord.OrderType === 'LIMIT_SELL') {
-            bal.OrderMade = true
-            bal.OrderAmt = ord.Limit
-            bal.OrderUuid = ord.OrderUuid
+          if (hol.Exchange === ord.Exchange && ord.OrderType === 'LIMIT_SELL') {
+            hol.OrderMade = true
+            hol.OrderAmt = ord.Limit
+            hol.OrderUuid = ord.OrderUuid
           }
         })
       })
@@ -29,7 +29,6 @@ var mainApp = new Vue({
     refreshPrice: function (hol) {
       const cloneHolding = this.holdings
       this.$http.post('/refreshPrice', {market: hol.Exchange}).then(response => {
-        console.log(hol.Exchange, ' : ', response.body.result.Last)
         cloneHolding.map((holding) => {
           if (holding.Exchange === hol.Exchange) {
             holding.tick = response.body.result.Last
@@ -37,6 +36,29 @@ var mainApp = new Vue({
           }
         })
         this.holdings = cloneHolding
+      })
+    },
+    addHoldingsToBals: function () {
+      this.accountBalances.map((bal) => {
+        this.holdings.map((hol) => {
+          const ex = hol.Exchange.split('-')[1]
+          if (ex === bal.Currency) {
+            hol.dollarAmt = bal.dollarAmt
+            hol.Balance = bal.Balance
+          }
+        })
+      if (bal.dollarAmt) {
+        this.grandTotal += parseFloat(bal.dollarAmt)
+      }
+      })
+      this.grandTotal = this.grandTotal.toFixed(2)
+      this.checkForMissingHoldings()
+    },
+    checkForMissingHoldings: function () {
+      this.accountBalances.map((act) => {
+        if (act.dollarAmt === undefined) {
+          console.log('this is missing from holdings', act)
+        }
       })
     },
     getOrders: function (historic) {
@@ -66,16 +88,18 @@ var mainApp = new Vue({
   created: function () {
     this.$http.get('/getHoldings').then(response => {
       this.holdings = response.body
+      console.log(this.holdings)
+      if (this.accountBalances) {
+        this.addHoldingsToBals()
+      }
     }, (err) => {console.error(err)})
 
     this.$http.get('/getBalances').then(response => {
       this.accountBalances = response.data.result
-      this.accountBalances.map((bal) => {
-      if (bal.dollarAmt) {
-        this.grandTotal += parseFloat(bal.dollarAmt)
+      if (this.holdings) {
+        this.addHoldingsToBals()
       }
-    })
-    this.grandTotal = this.grandTotal.toFixed(2)
+
     }, (err) => {console.error(err)})
   }
 })
