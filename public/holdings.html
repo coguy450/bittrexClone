@@ -25,8 +25,8 @@
           <div class="description">
             Purchase Price: {{hol.PricePerUnit}}<br />
             Current Price: {{hol.tick}}  <i v-on:click="refreshPrice(hol)" class="refresh icon"></i><br />
-            Dollar Amt: ${{hol.dollarAmt}} <br />
-            <span v-if="hol.OrderAmt">Sell order: {{hol.OrderAmt}}</span>
+            <span v-if="hol.OrderAmt">Sell order: {{hol.OrderAmt}}<br /></span>
+            Dollar Amt: <span class="ui small header">${{hol.dollarAmt}}</span>
           </div>
         </div>
       </div>
@@ -47,7 +47,7 @@
           </div>
         </div>
       </div>
-      <h3 v-if="accountBalances">Bittex Holdings</h3>
+      <!-- <h3 v-if="accountBalances">Bittex Holdings</h3>
       <table class="ui celled table half-table" v-if="accountBalances">
         <thead>
           <tr>
@@ -71,7 +71,7 @@
             <td><a v-if="act.OrderAmt" v-on:click="cancelOrder(act)">Cancel</a></td>
           </tr>
         </tbody>
-      </table>
+      </table> -->
     </div>
     <script src="js/vue.js"></script>
     <script src="js/vue-resource.min.js"></script>

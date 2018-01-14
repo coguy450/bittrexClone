@@ -21,7 +21,9 @@ Vue.component('demo-grid', {
       bitCoin50: null,
       reversed: false,
       originalGrid: [],
-      originalDayGrid: []
+      originalDayGrid: [],
+      discount: .95,
+      newPurchaseAmt: 75
     }
   },
   methods: {
@@ -37,7 +39,6 @@ Vue.component('demo-grid', {
         reverse = false
         this.reversed = false
       }
-
       if (key === 'MarketName' || key === 'MarketCurrencyLong') {
         floater = null
       } else {
@@ -74,6 +75,17 @@ Vue.component('demo-grid', {
       }, (err) => {
         console.log(err)
       })
+    },
+    updateDisc: function () {
+      this.gridData.map((market) => {
+        market.LastMinus5 = (market.Last * this.discount).toFixed(8).replace(/\.?0+$/,'')
+      })
+    },
+    updatePurchaseAmt: function () {
+      this.$http.get(`/getFifty?newAmt=${this.newPurchaseAmt}`).then(responseTwo => {
+        this.bitCoin50 = responseTwo.body
+        console.log('new 50 ', this.bitCoin50)
+      }, (err) => {console.error(err)})
     },
     refreshPrice: function (coin) {
       const cloneData = this.gridData
@@ -161,8 +173,8 @@ Vue.component('demo-grid', {
       console.log(err)
     })
     this.$http.get('/getFifty').then(responseTwo => {
-      console.log('bit 50', responseTwo)
       this.bitCoin50 = responseTwo.body
+      console.log('new 50 ', this.bitCoin50)
     }, (err) => {console.error(err)})
 
   }

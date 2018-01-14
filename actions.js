@@ -143,6 +143,7 @@ exports.getBalances = (req, res) => {
 }
 
 exports.getFifty = (req, res) => {
+  const purchasePrice = req.query.newAmt
   coinbase.getBCPrice().then(function(bcAmt) {
     const bitCoin50 = (70 / bcAmt).toFixed(8).replace(/\.?0+$/,'')
     res.status(200).send(bitCoin50)

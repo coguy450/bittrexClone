@@ -27,11 +27,13 @@
                 <option>ETH</option>
               </select>
               <a v-on:click="removeOrdersAndHoldings">Remove existing</a>
-              <input type="number" class="ui input focus" style="width: 40px" v-on:change="updateDay" placeholder="Day" />
-              <div v-for="col in gridColumns" class="ui image label" >
+              <input type="number" class="ui input focus" style="width: 50px" v-on:change="updateDay" placeholder="Day" />
+                <input type="number" class="ui input focus" style="width: 80px" v-on:change="updateDisc" v-model="discount" placeholder="Discount" />
+                <input type="number" class="ui input focus" style="width: 80px" v-on:change="updatePurchaseAmt" placeholder="Purchase" v-model="newPurchaseAmt" />
+              <!-- <div v-for="col in gridColumns" class="ui image label" >
                 {{col}}
                 <i class="delete icon" v-on:click="removeCol(col)"></i>
-              </div>
+              </div> -->
             </div>
             <div class="doubleTableWrap">
               <table>

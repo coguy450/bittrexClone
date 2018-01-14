@@ -31,11 +31,13 @@ var mainApp = new Vue({
       this.$http.post('/refreshPrice', {market: hol.Exchange}).then(response => {
         cloneHolding.map((holding) => {
           if (holding.Exchange === hol.Exchange) {
+            console.log('found market', holding)
             holding.tick = response.body.result.Last
             holding.profit = (((response.body.result.Last - holding.PricePerUnit) / holding.PricePerUnit ) * 100).toFixed(2) + '%'
+            console.log('holding after', holding.tick)
           }
         })
-        this.holdings = cloneHolding
+        this.holdings = cloneHolding.slice()
       })
     },
     addHoldingsToBals: function () {
@@ -43,8 +45,10 @@ var mainApp = new Vue({
         this.holdings.map((hol) => {
           const ex = hol.Exchange.split('-')[1]
           if (ex === bal.Currency) {
+            hol.tick = bal.Last
             hol.dollarAmt = bal.dollarAmt
             hol.Balance = bal.Balance
+            hol.profit = (((bal.Last - hol.PricePerUnit) / hol.PricePerUnit ) * 100).toFixed(2) + '%'
           }
         })
       if (bal.dollarAmt) {
@@ -56,8 +60,16 @@ var mainApp = new Vue({
     },
     checkForMissingHoldings: function () {
       this.accountBalances.map((act) => {
-        if (act.dollarAmt === undefined) {
-          console.log('this is missing from holdings', act)
+        const findHold = this.holdings.filter((hol) => hol.Exchange.split('-')[1] === act.Currency)
+        if (findHold.length === 0 && act.Balance > 0 && act.Currency !== 'SBD' && act.Currency !== 'USDT') {
+        //  location.href = '/closed'
+        }
+      })
+      this.holdings.map((hol) => {
+        const findAct = this.accountBalances.filter((act) => hol.Exchange.split('-')[1] === act.Currency)
+        if (findAct.length === 0 ) {
+          console.log('findAct length 0')
+        //  location.href = '/closed'
         }
       })
     },
@@ -88,7 +100,7 @@ var mainApp = new Vue({
   created: function () {
     this.$http.get('/getHoldings').then(response => {
       this.holdings = response.body
-      console.log(this.holdings)
+    // /  console.log(this.holdings)
       if (this.accountBalances) {
         this.addHoldingsToBals()
       }

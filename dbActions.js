@@ -123,22 +123,23 @@ exports.getHoldings = ((req, res) => {
     let resultsWithTicks
     const col = db.collection('holdings')
     const markets = db.collection('markets')
-    col.find({sold:{$exists: false}}).toArray((fErr, results) => {
+    const excludeFields = {ConditionTarget: 0, Condition: 0, ImmediateOrCancel: 0, IsConditional: 0, QuantityRemaining: 0}
+    col.find({sold:{$exists: false}}, excludeFields).toArray((fErr, results) => {
       if (fErr) console.log(fErr)
       if (results.length === 0) {
         console.log('why no holdings?')
       }
         async.eachLimit(results, 10, (item, done) => {
-          actions.getTicks(item.Exchange, function(tick) {
+    //      actions.getTicks(item.Exchange, function(tick) {
             markets.find({MarketName: item.Exchange}).toArray((fErr, foundMarket) => {
               item.name = foundMarket[0].MarketCurrencyLong || null
               item.logo = foundMarket[0].LogoUrl
-              item.tick = tick && tick.result.Last ? tick.result.Last.toFixed(12).replace(/\.?0+$/,'') : item.PricePerUnit
-              item.profit = (((tick.result.Last - item.PricePerUnit) / item.PricePerUnit ) * 100).toFixed(2) + '%'
+        //      item.tick = tick && tick.result.Last ? tick.result.Last.toFixed(12).replace(/\.?0+$/,'') : item.PricePerUnit
+          //    item.profit = (((tick.result.Last - item.PricePerUnit) / item.PricePerUnit ) * 100).toFixed(2) + '%'
               item.PricePerUnit = parseFloat(item.PricePerUnit).toFixed(12).replace(/\.?0+$/,'')
               done()
             })
-          })
+      //    })
         }, function () {
           res.status(200).send(results)
         })
