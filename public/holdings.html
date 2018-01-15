@@ -19,14 +19,17 @@
         <div class="card" v-for="hol in holdings">
         <div class="content">
           <div class="header"><a :href="`/charts?cur=${hol.Exchange}`">{{hol.name}}</a> - {{hol.Exchange}}
-            <img :src="hol.logo" height="25" />
+            <img :src="hol.logo" class="right floated mini ui image" height="25" />
           </div>
           <div class="meta">Profit: {{hol.profit}}</div>
           <div class="description">
             Purchase Price: {{hol.PricePerUnit}}<br />
             Current Price: {{hol.tick}}  <i v-on:click="refreshPrice(hol)" class="refresh icon"></i><br />
             <span v-if="hol.OrderAmt">Sell order: {{hol.OrderAmt}}<br /></span>
-            Dollar Amt: <span class="ui small header">${{hol.dollarAmt}}</span>
+            <hr />
+
+              Dollar Amt: <span class="ui small header">${{hol.dollarAmt}}</span>
+              <span v-if="!hol.dollarAmt"><div class="ui mini active inline loader"></div></span>
           </div>
         </div>
       </div>

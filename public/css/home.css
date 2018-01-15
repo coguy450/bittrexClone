@@ -3,13 +3,17 @@ body {
   font-size: 14px;
   color: #444;
   overflow: hidden;
+  width: 100vw;
 }
 
-table {
-  margin-left: 20px
-  border: 2px solid #42b983;
-  border-radius: 3px;
-  background-color: #fff;
+table thead {
+  position: sticky;
+}
+
+.table-body {
+  overflow: auto;
+  width: 100%;
+  position: relative;
 }
 
 #holdings {
@@ -21,72 +25,19 @@ table {
   height: 100vh;
   overflow: scroll;
 }
-
-th {
-  background-color: #42b983;
-  color: rgba(255,255,255,0.66);
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.tableWrapper {
-  height: calc(100vh - 155px);
+#tab-body {
+  height: calc(100vh - 115px);
   overflow-y: scroll;
+  text-overflow: ellipsis;
 }
 
 #mainApp {
-  height: 40px;
+  height: 30px;
 }
 
 #appWrapper {
   height: 100vh;
   overflow: hidden;
-}
-
-.doubleTableWrap {
-  overflow-x: auto;
-  width: auto;
-}
-
-th, td {
-  min-width: 110px;
-  max-width: 140px;
-  padding: 4px 1px;
-  text-overflow: ellipsis;
-}
-
-th.active {
-  color: #fff;
-}
-a {
-  cursor: pointer;
-}
-th.active .arrow {
-  opacity: 1;
-}
-
-.arrow {
-  display: inline-block;
-  vertical-align: middle;
-  width: 0;
-  height: 0;
-  margin-left: 3px;
-  opacity: 0.66;
-}
-
-.arrow.asc {
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-bottom: 4px solid #fff;
-}
-
-.arrow.dsc {
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-top: 4px solid #fff;
 }
 
 #holdings,
@@ -106,7 +57,6 @@ th.active .arrow {
   padding-left: 10px;
 }
 
-
 .profitNum {
   width: 60px;
 }
@@ -115,11 +65,6 @@ th.active .arrow {
   width: 120px;
 }
 
-.meta {
- font-size: 22px;
- font-weight: 700;
- color: green;
-}
 
 .half-table {
   width: 50%;

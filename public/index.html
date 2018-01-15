@@ -34,49 +34,51 @@
                 {{col}}
                 <i class="delete icon" v-on:click="removeCol(col)"></i>
               </div> -->
-            </div>
-            <div class="doubleTableWrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th @click="sortBy('MarketCurrencyLong')" :class="{ active: sortKey === 'MarketCurrencyLong' }">Long Curr Name
-                      <span class="arrow" :class="sortOrders.MarketCurrencyLong > 0 ? 'asc' : 'dsc'">
-                      </span>
-                    </th>
-                    <th v-for="key in gridColumns" v-if="key !== 'MarketCurrencyLong'"
-                      @click="sortBy(key)"
-                      :class="{ active: sortKey == key }">
-                      {{ key }}
-                      <span class="arrow" :class="sortOrders[key] > 0 ? 'asc' : 'dsc'">
-                      </span>
-                    </th>
-                    <!-- <th>Fake Buy</th> -->
-                    <th>Purchase</th>
-                  </tr>
-                </thead>
-              </table>
 
-              <table class="bottomTable ui striped table" >
-                <div class="tableWrapper">
-                  <tbody>
+            </div>
+            <div v-if="!gridData" class="ui active inverted dimmer">
+             <div class="ui text loader">Loading</div>
+           </div>
+           <div class="ui sortable selectable celled table">
+             <thead id="tHead">
+               <tr>
+                 <th @click="sortBy('MarketCurrencyLong')"
+                  style="width: 150px; text-overflow: ellipsis"
+                  :class="sortKey == 'MarketCurrencyLong' ? reversed ? 'sorted descending' : 'sorted ascending' : null">
+                   Long Curr Name
+                   </span>
+                 </th>
+                 <th v-for="key in gridColumns" v-if="key !== 'MarketCurrencyLong'"
+                   @click="sortBy(key)"
+                   class="one wide"
+                   :class="sortKey == key ? reversed ? 'sorted descending' : 'sorted ascending' : null">
+                   {{ key }}
+                   </span>
+                 </th>
+                 <!-- <th>Fake Buy</th> -->
+                 <th>Purchase</th>
+               </tr>
+             </thead>
+         </div>
+            <div v-if="gridData" id="tab-body" class="ui sortable selectable celled table">
+              <table>
+                <tbody class="table-body" >
                   <tr v-for="entry in gridData">
-                    <td><a :href="`/charts?cur=${entry.MarketName}`">{{entry.MarketCurrencyLong}}</a></td>
-                    <td v-for="key in gridColumns" v-if="key !== 'MarketCurrencyLong'">
+                    <td class="one wide"><a :href="`/charts?cur=${entry.MarketName}`">{{entry.MarketCurrencyLong}}</a></td>
+                    <td class="one wide" v-for="key in gridColumns" v-if="key !== 'MarketCurrencyLong'" >
                       <span v-if="key !== 'Logo' && key !== 'MarketName' && key !== 'MarketCurrencyLong' && key !== 'Last'">{{entry[key]}}</span>
                       <span v-if="key === 'Last'" v-on:click="refreshPrice(entry)">{{entry[key]}}</span>
                       <a v-if="key === 'MarketName'" :href="`/charts?cur=${entry.MarketName}`" target="blank">{{entry[key]}}</a>
                     </td>
                     <!-- <td><a v-on:click="doFakeBuy(entry)">Fake Buy</a></td> -->
                     <td><div class="ui left action input mini">
-                        <button v-on:click="doBuy(entry)" class="ui mini teal labeled icon button">
-                          <i class="cart icon"></i>
+                        <button v-on:click="doBuy(entry)" class="ui tiny teal button">
                           Buy
                         </button>
-                        <input type="text" v-model="entry.buyPrice">
+                        <input type="text" style="width: 100px" v-model="entry.buyPrice">
                       </div></td>
-                  </tr>
+                    </tr>
                 </tbody>
-                </div>
               </table>
           </div>
         </div>

@@ -30,10 +30,10 @@ exports.getMarkets = getMarkets
 function processResults (incomingResponse, response, markets) {
   let clonedResult = incomingResponse
   clonedResult.map((ac) => {
-    const dayRange = (ac.High - ac.Low) / ac.Low * 100
+    const dayRng = (ac.High - ac.Low) / ac.Low * 100
     const sellPressure = (ac.OpenSellOrders / ac.Volume) * 100
     const buyPressure = (ac.OpenBuyOrders / ac.Volume) * 100
-    ac.dayRange = dayRange.toFixed(2)
+    ac.dayRng = dayRng.toFixed(2)
     Object.keys(ac).map((key) => {
       if (typeof ac[key] === 'number') {
         if (key === 'Volume') {
@@ -43,12 +43,13 @@ function processResults (incomingResponse, response, markets) {
         }
       }
     })
+
     if (Array.isArray(markets)) {
       markets.map((ma) => {
         if (ma.MarketName === ac.MarketName) {
           const down30 = ((ac.Last - ma.thirtyDayLow) / ma.thirtyDayLow) * 100
           const range30 = ((ma.thirtyDayHigh - ma.thirtyDayLow) / ma.thirtyDayLow) * 100
-          ac.MarketCurrencyLong = ma.MarketCurrencyLong
+          ac.MarketCurrencyLong = ma.MarketCurrencyLong.slice(0,15)
           ac.goodToBuy = ma.goodToBuy
           ac.CMO = ma.CMO
           ac.DX = ma.DX

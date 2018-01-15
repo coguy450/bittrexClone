@@ -65,7 +65,7 @@ Vue.component('demo-grid', {
     },
     updateDay: function(evt) {
       this.originalDayGrid = this.originalDayGrid.length === 0 ? this.gridData : this.originalDayGrid
-      this.gridData = this.originalDayGrid.filter((obj) => parseFloat(obj.dayRange) > evt.target.value)
+      this.gridData = this.originalDayGrid.filter((obj) => parseFloat(obj.dayRng) > evt.target.value)
     },
     getSummaries: function () {
       this.$http.get('/marketSummaries').then(response => {
@@ -184,6 +184,8 @@ var demo = new Vue({
   el: '#demo',
   data: {
     searchQuery: '',
+    MarketCurrencyLong: null,
+    key: null,
     gridData: null,
     gridColumns: {}
   }
