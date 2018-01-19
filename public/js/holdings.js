@@ -62,14 +62,14 @@ var mainApp = new Vue({
       this.accountBalances.map((act) => {
         const findHold = this.holdings.filter((hol) => hol.Exchange.split('-')[1] === act.Currency)
         if (findHold.length === 0 && act.Balance > 0 && act.Currency !== 'SBD' && act.Currency !== 'USDT') {
-        //  location.href = '/closed'
+          location.href = '/closed'
         }
       })
       this.holdings.map((hol) => {
         const findAct = this.accountBalances.filter((act) => hol.Exchange.split('-')[1] === act.Currency)
         if (findAct.length === 0 ) {
           console.log('findAct length 0')
-        //  location.href = '/closed'
+          location.href = '/closed'
         }
       })
     },

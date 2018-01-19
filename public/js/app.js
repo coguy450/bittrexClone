@@ -10,7 +10,7 @@ Vue.component('demo-grid', {
   template: '#grid-template',
   data: function () {
     return {
-      sortKey: 'MarketName',
+      sortKey: 'LongCurrencyName',
       sortOrders: {},
       gridData: null,
       gridColumns: null,

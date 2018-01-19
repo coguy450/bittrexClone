@@ -14,8 +14,6 @@
           <a class="item" href="/">Home</a>
           <a class="item" href="/holdings">Holdings</a>
           <a class="item" href="/closed">Closed Orders</a>
-          <a class="item" >Currencies</a>
-          <a class="item">Market Summaries</a>
         </div>
       </div>
         <script type="text/x-template" id="grid-template">
@@ -39,7 +37,7 @@
             <div v-if="!gridData" class="ui active inverted dimmer">
              <div class="ui text loader">Loading</div>
            </div>
-           <div class="ui sortable selectable celled table">
+           <div id="topHeader" class="ui sortable selectable celled table">
              <thead id="tHead">
                <tr>
                  <th @click="sortBy('MarketCurrencyLong')"
