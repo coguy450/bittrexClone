@@ -35,7 +35,7 @@ function doAnalysis (low, high, close, resObj) {
       optInTimePeriod: 9
     }, function (err, result) {
         if (err) console.log(err)
-        console.log("DX Function Results:");
+      //  console.log("DX Function Results:");
         if (result.result) {
           const newData = result.result.outReal.slice(result.result.outReal.length - 1)
           resObj.DX = newData[0].toFixed(2)

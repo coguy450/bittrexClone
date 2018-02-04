@@ -28,10 +28,11 @@ const conMongo = ((callback) => {
 })
 
 exports.getMarkets = (callback) => {
+  const onlyGood = {$or: [{goodToBuy: 'true'}, {goodToBuy: {$exists: false}}]}
   conMongo((db) => {
     const col = db.collection('markets')
     const whichFields = {_id: 0, BaseCurrencyLong: 0, BaseCurrency: 0, BaseMarket: 0, MinTradeSize: 0, Created:0, Notice: 0, isSponsored: 0}
-    col.find({$or: [{goodToBuy: 'true'}, {goodToBuy: {$exists: false}}]}, whichFields).toArray((err, results) => {
+    col.find(onlyGood, whichFields).toArray((err, results) => {
       callback(results)
     })
   })
@@ -126,23 +127,19 @@ exports.getHoldings = ((req, res) => {
     const excludeFields = {ConditionTarget: 0, Condition: 0, ImmediateOrCancel: 0, IsConditional: 0, QuantityRemaining: 0}
     col.find({sold:{$exists: false}}, excludeFields).toArray((fErr, results) => {
       if (fErr) console.log(fErr)
-      if (results.length === 0) {
-        console.log('why no holdings?')
-      }
-        async.eachLimit(results, 10, (item, done) => {
-    //      actions.getTicks(item.Exchange, function(tick) {
-            markets.find({MarketName: item.Exchange}).toArray((fErr, foundMarket) => {
-              item.name = foundMarket[0].MarketCurrencyLong || null
-              item.logo = foundMarket[0].LogoUrl
-        //      item.tick = tick && tick.result.Last ? tick.result.Last.toFixed(12).replace(/\.?0+$/,'') : item.PricePerUnit
-          //    item.profit = (((tick.result.Last - item.PricePerUnit) / item.PricePerUnit ) * 100).toFixed(2) + '%'
-              item.PricePerUnit = parseFloat(item.PricePerUnit).toFixed(12).replace(/\.?0+$/,'')
-              done()
-            })
-      //    })
-        }, function () {
-          res.status(200).send(results)
-        })
+      if (results.length === 0) console.log('why no holdings?')
+      async.eachLimit(results, 10, (item, done) => {
+          markets.find({MarketName: item.Exchange}).toArray((fErr, foundMarket) => {
+            item.name = foundMarket[0].MarketCurrencyLong || null
+            item.logo = foundMarket[0].LogoUrl
+      //      item.tick = tick && tick.result.Last ? tick.result.Last.toFixed(12).replace(/\.?0+$/,'') : item.PricePerUnit
+        //    item.profit = (((tick.result.Last - item.PricePerUnit) / item.PricePerUnit ) * 100).toFixed(2) + '%'
+            item.PricePerUnit = parseFloat(item.PricePerUnit).toFixed(12).replace(/\.?0+$/,'')
+            done()
+          })
+      }, function () {
+        res.status(200).send(results)
+      })
     })
   })
 })
@@ -167,7 +164,7 @@ exports.checkHoldings = () => {
             })
           })
         }, function () {
-
+          
         })
     })
   })

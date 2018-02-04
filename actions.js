@@ -69,7 +69,7 @@ function processResults (incomingResponse, response, markets) {
     delete ac.Ask
     delete ac.PrevDay
     delete ac.Volume
-    delete ac.goodToBuy
+  //  delete ac.goodToBuy
   })
   clonedResult = clonedResult.filter((obj) => (
     obj.downDay
