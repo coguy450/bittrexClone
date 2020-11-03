@@ -15,7 +15,7 @@
     "coinbase": "^2.0.6",
     "crypto-js": "^3.1.9-1",
     "express": "^4.16.2",
-    "mongodb": "^2.2.33",
+    "mongodb": "^3.1.13",
     "node-bittrex-api": "^0.7.8",
     "nonce": "^1.0.4",
     "superagent": "^3.8.1",
