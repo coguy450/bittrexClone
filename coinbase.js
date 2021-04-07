@@ -1,4 +1,4 @@
-const Client = require('coinbase').Client;
+const Client = require('coinbase-commerce-node').Client;
 const apiUrl = 'https://api.coinbase.com/v2/prices/spot?currency=USD'
 const cdAPI = 'https://api.coindesk.com/v1/bpi/currentprice.json'
 const secrets = require('./keys')
